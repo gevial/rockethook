@@ -52,11 +52,15 @@ class Webhook(object):
             conn = httplib.HTTPConnection(self.server_fqdn)
         conn.request('POST', '/hooks/' + self.token, payload, headers)
         response = conn.getresponse()
-        if response.status != 200:
-            error = json.loads(response.read())
-            conn.close()
-            raise WebhookError(response.status, error['message'])
+        status = response.status
+        response_data = response.read()
         conn.close()
+        try:
+            data = json.loads(response_data)
+        except:
+            raise WebhookError(response.status, 'Not an API response, check your token.')
+        if status != 200:
+            raise WebhookError(response.status, data['message'])
 
 
 class Message(object):
