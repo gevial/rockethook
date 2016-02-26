@@ -6,6 +6,7 @@ import urllib
 
 
 class WebhookError(Exception):
+    """Raised when Rocket.Chat server responses with non-JSON or with an explicit error."""
     def __init__(self, status, message):
         self.status = status
         self.message = 'Rocket.Chat server error, code {0}: {1}'.format(status, message)
@@ -13,6 +14,19 @@ class WebhookError(Exception):
 
 
 class Webhook(object):
+    """Usage example:
+
+    >>> import rockethook
+    >>> my_hook = rockethook.Webhook('https://rocketchat.example.com', token)
+    >>> msg = rockethook.Message(icon_url='http://example.com/icon.png')
+    >>> msg.append_text('First line.')
+    >>> msg.append_text('Second line.')
+    >>> msg.add_attachment(title='Attach', title_link='http://example.com', image_url='http://example.com/img.png')
+    >>> my_hook.post(msg)
+    >>>
+    >>> my_hook.quick_post('Hi!')
+    >>> my_hook.quick_post('What\'s up?')
+    """
     def __init__(self, server_url, token):
         if server_url.split('://')[0] == 'https':
             self.https = True
@@ -22,18 +36,17 @@ class Webhook(object):
         self.token = token
 
     def quick_post(self, text):
-        """Method for posting simple text messages via single hook."""
+        """Method for posting simple text messages."""
         self.post(Message(text))
 
     def post(self, message):
         """Send your message to Rocket.Chat.
 
-        message argument is expected to be a pyrocketchat.Message object.
+        message argument is expected to be a rockethook.Message object.
         If you want to just post simple text message, please use quick_post() method.
+        """
 
-        Raises pyrocketchat.WebhookError if response code is not 200."""
-
-        assert type(message) is Message, 'Error: message is not a pyrocketchat.Message'
+        assert type(message) is Message, 'Error: message is not a rockethook.Message'
 
         payload_dict = {}
         if message.text:
@@ -63,6 +76,16 @@ class Webhook(object):
 
 
 class Message(object):
+    """Usage example:
+
+    >>> import rockethook
+    >>> my_hook = rockethook.Webhook('https://rocketchat.example.com', token)
+    >>> msg = rockethook.Message(icon_url='http://example.com/icon.png')
+    >>> msg.append_text('First line.')
+    >>> msg.append_text('Second line.')
+    >>> msg.add_attachment(title='Attach', title_link='http://example.com', image_url='http://example.com/img.png')
+    >>> my_hook.post(msg)
+    """
     def __init__(self, text='', icon_url=None):
         self.text = text
         self.icon_url = icon_url
