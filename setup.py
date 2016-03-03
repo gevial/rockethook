@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup, find_packages
+from os.path import join, dirname
 
 
-with open('README.rst') as f:
+with open(join(dirname(__file__), 'README.rst')) as f:
     readme = f.read()
-
-with open('LICENSE') as f:
-    license = f.read()
 
 setup(
     name='rockethook',
@@ -17,6 +15,5 @@ setup(
     author='Gennady Aleksandrov',
     author_email='gevial@yahoo.com',
     url='https://github.com/gevial/rockethook',
-    license=license,
     packages=find_packages(exclude=('tests', 'docs'))
 )
