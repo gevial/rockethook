@@ -1,8 +1,17 @@
-"""Simple library for posting to Rocket.Chat via webhooks a.k.a. integrations."""
+"""Simple library for posting to Rocket.Chat via webhooks a.k.a. integrations.
+
+The idea behind this library is to create Webhook object and then
+post Messages with it. You can create Message object and fulfill it
+with content (text and/or attachments) later.
+
+Or you can just Webhook.quick_post('Your message') without bothering with Message objects.
+"""
 
 import json
 import httplib
 import urllib
+
+from urlparse import urlparse
 
 
 class WebhookError(Exception):
@@ -21,23 +30,33 @@ class Webhook(object):
     >>> msg = rockethook.Message(icon_url='http://example.com/icon.png')
     >>> msg.append_text('First line.')
     >>> msg.append_text('Second line.')
-    >>> msg.add_attachment(title='Attach', title_link='http://example.com', image_url='http://example.com/img.png')
+    >>> msg.add_attachment(
+    ...     title='Attach',
+    ...     title_link='http://example.com',
+    ...     image_url='http://example.com/img.png'
+    ... )
     >>> my_hook.post(msg)
     >>>
     >>> my_hook.quick_post('Hi!')
     >>> my_hook.quick_post('What\'s up?')
     """
     def __init__(self, server_url, token):
-        if server_url.split('://')[0] == 'https':
-            self.https = True
+        """ Creates Webhook suitable for posting multiple messages.
+
+        server_url should be a valid URL starting with scheme.
+        token is a token given by a Rocket.Chat server.
+        """
+        parsed = urlparse(server_url)
+        self.scheme = parsed.scheme
+        if parsed.netloc:
+            self.server_fqdn = parsed.netloc
         else:
-            self.https = False
-        self.server_fqdn = server_url.split('://')[-1].replace('/', '')
+            self.server_fqdn = parsed.path.split('/')[0]
         self.token = token
 
     def quick_post(self, text):
         """Method for posting simple text messages."""
-        self.post(Message(text))
+        self.post(Message(text=text))
 
     def post(self, message):
         """Send your message to Rocket.Chat.
@@ -58,7 +77,7 @@ class Webhook(object):
         payload = 'payload=' + urllib.quote_plus(json.dumps(payload_dict))
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
 
-        if self.https:
+        if self.scheme == 'https':
             conn = httplib.HTTPSConnection(self.server_fqdn)
         else:
             conn = httplib.HTTPConnection(self.server_fqdn)
@@ -83,10 +102,21 @@ class Message(object):
     >>> msg = rockethook.Message(icon_url='http://example.com/icon.png')
     >>> msg.append_text('First line.')
     >>> msg.append_text('Second line.')
-    >>> msg.add_attachment(title='Attach', title_link='http://example.com', image_url='http://example.com/img.png')
+    >>> msg.add_attachment(
+    ...     title='Attach',
+    ...     title_link='http://example.com',
+    ...     image_url='http://example.com/img.png'
+    ... )
     >>> my_hook.post(msg)
     """
     def __init__(self, text='', icon_url=None):
+        """ Creates Message.
+
+        You can create a Message and fulfill it with content at the same time like this:
+        >>> msg = rockethook.Message(text='Hi there')
+
+        Or you can create a Message and then add text and attachments to it later.
+        """
         self.text = text
         self.icon_url = icon_url
         self.attachments = []
