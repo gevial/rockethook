@@ -3,6 +3,9 @@ Rockethook
 
 Simple library for posting to Rocket.Chat via webhooks a.k.a. integrations
 
+*Installation*
+Rockethook can be installed from PyPi: `pip install rockethook`.
+
 The idea behind this library is to create Webhook object and then post Messages with it.
 You can create Message object and fulfill it with content (text and/or attachments) later.
 
