@@ -5,7 +5,7 @@ Simple library for posting to Rocket.Chat via webhooks a.k.a. integrations
 
 Installation
 ++++++++++++
-Rockethook can be installed from PyPi: pip install rockethook
+Rockethook can be installed from PyPi: :code:`pip install rockethook`
 
 Usage
 +++++
