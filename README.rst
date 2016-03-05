@@ -13,7 +13,7 @@ Usage
 The idea behind this library is to create Webhook object and then post Messages with it.
 You can create Message object and fulfill it with content (text and/or attachments) later.
 
-Or you can just Webhook.quick_post('Your message') without bothering with Message objects.
+Or you can just :code:`Webhook.quick_post('Your message')` without bothering with Message objects.
 
 It is a very small library indeed, so the best explanation is an example of usage:
 
