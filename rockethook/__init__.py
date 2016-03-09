@@ -131,7 +131,7 @@ class Message(object):
     def add_attachment(self, **kwargs):
         """Add an attachment to the message.
 
-        As of Rocket.Chat version 0.17, valid attachment arguments are the following:
+        As of Rocket.Chat version 0.20, valid attachment arguments are the following:
             * title
             * title_link
             * text
