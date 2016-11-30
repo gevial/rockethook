@@ -70,6 +70,8 @@ class Webhook(object):
         payload_dict = {}
         if message.text:
             payload_dict['text'] = message.text
+        if message.channel:
+            payload_dict['channel'] = message.channel
         if message.icon_url:
             payload_dict['icon_url'] = message.icon_url
         if message.attachments:
@@ -109,7 +111,7 @@ class Message(object):
     ... )
     >>> my_hook.post(msg)
     """
-    def __init__(self, text='', icon_url=None):
+    def __init__(self, text='', channel=None, icon_url=None):
         """ Creates Message.
 
         You can create a Message and fulfill it with content at the same time like this:
@@ -118,6 +120,7 @@ class Message(object):
         Or you can create a Message and then add text and attachments to it later.
         """
         self.text = text
+        self.channel = channel
         self.icon_url = icon_url
         self.attachments = []
 
