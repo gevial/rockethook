@@ -9,7 +9,7 @@ with open(join(dirname(__file__), 'README.rst')) as f:
 
 setup(
     name='rockethook',
-    version='1.0.1',
+    version='1.0.2',
     description='Simple library for posting to Rocket.Chat via webhooks a.k.a. integrations.',
     long_description=readme,
     license='MIT',
