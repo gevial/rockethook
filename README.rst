@@ -29,6 +29,10 @@ It is a very small library indeed, so the best explanation is an example of usag
 ... )
 >>> my_hook.post(msg)
 
+To override default webhook's channel:
+
+>>> msg = rockethook.Message(channel="#my-channel")
+
 To quickly post simple text messages:
 
 >>> my_hook.quick_post('Hi!')
