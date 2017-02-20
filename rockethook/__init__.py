@@ -93,7 +93,13 @@ class Webhook(object):
         except:
             raise WebhookError(response.status, 'Not an API response, check your token.')
         if status != 200:
-            raise WebhookError(response.status, data['message'])
+            if 'error' in data:
+                err_msg = data['error']
+            elif 'message' in data:
+                err_msg = data['message']
+            else:
+                err_msg = data
+            raise WebhookError(response.status, err_msg)
 
 
 class Message(object):
